@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { galleryImages } from "@/data/staticData";
+import { GalleryImageSkeleton } from "@/components/GalleryImageSkeleton";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<{ url: string; title: string } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const headerRef = useScrollAnimation();
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="min-h-screen section-padding">
@@ -18,17 +25,24 @@ const Gallery = () => {
           </p>
         </div>
 
-        <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            visible: {
-              transition: { staggerChildren: 0.08 }
-            }
-          }}
-        >
-          {galleryImages.map((image, index) => (
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            {Array.from({ length: 12 }).map((_, index) => (
+              <GalleryImageSkeleton key={index} />
+            ))}
+          </div>
+        ) : (
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: {
+                transition: { staggerChildren: 0.08 }
+              }
+            }}
+          >
+            {galleryImages.map((image, index) => (
               <motion.div
                 key={image.id}
                 variants={{
@@ -52,9 +66,10 @@ const Gallery = () => {
                     )}
                   </div>
                 </div>
-              </motion.div>
-            ))}
-          </motion.div>
+                </motion.div>
+              ))}
+            </motion.div>
+        )}
 
         {/* Lightbox */}
         <AnimatePresence>

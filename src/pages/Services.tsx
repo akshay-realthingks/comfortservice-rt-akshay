@@ -1,10 +1,18 @@
 import { ServiceCard } from "@/components/ServiceCard";
+import { ServiceCardSkeleton } from "@/components/ServiceCardSkeleton";
 import { SERVICES } from "@/config/contact";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 const Services = () => {
   const headerRef = useScrollAnimation();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="min-h-screen section-padding">
@@ -17,33 +25,41 @@ const Services = () => {
           </p>
         </div>
 
-        <motion.div 
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            visible: {
-              transition: { staggerChildren: 0.08 }
-            }
-          }}
-        >
-          {SERVICES.map((service, index) => (
-            <motion.div
-              key={service.id}
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 }
-              }}
-              transition={{ duration: 0.4 }}
-            >
-              <ServiceCard
-                name={service.name}
-                description={service.description}
-                startingPrice={service.startingPrice}
-              />
-            </motion.div>
-          ))}
-        </motion.div>
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <ServiceCardSkeleton key={index} />
+            ))}
+          </div>
+        ) : (
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: {
+                transition: { staggerChildren: 0.08 }
+              }
+            }}
+          >
+            {SERVICES.map((service, index) => (
+              <motion.div
+                key={service.id}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+                transition={{ duration: 0.4 }}
+              >
+                <ServiceCard
+                  name={service.name}
+                  description={service.description}
+                  startingPrice={service.startingPrice}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
 
         <div className="mt-10 bg-accent rounded-lg p-6 text-center">
           <h2 className="mb-2">Additional Services Available</h2>
