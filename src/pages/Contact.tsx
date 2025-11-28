@@ -222,30 +222,29 @@ const Contact = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label htmlFor="phone" className="text-xs">Mobile Number *</Label>
-                    <Input
-                      id="phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      placeholder="10-digit number"
-                      required
-                      className="h-9"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="email" className="text-xs">Email (Optional)</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="your@email.com"
-                      className="h-9"
-                    />
-                  </div>
+                <div>
+                  <Label htmlFor="phone" className="text-xs">Mobile Number *</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    placeholder="10-digit number"
+                    required
+                    className="h-9"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="email" className="text-xs">Email (Optional)</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="your@email.com"
+                    className="h-9"
+                  />
                 </div>
 
                 <div>

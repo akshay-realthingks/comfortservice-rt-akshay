@@ -47,8 +47,7 @@ export const Navbar = () => {
       <div className="container-wide">
         <div className="flex justify-between items-center h-14">
           <Link to="/" className="hover:opacity-80 transition-opacity flex-shrink-0 flex items-center gap-2">
-            <img src={logo} alt={CONTACT_INFO.companyName} className="h-10 w-auto" />
-            
+            <img src={logo} alt={CONTACT_INFO.companyName} className="h-8 sm:h-10 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}
