@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { galleryImages } from "@/data/staticData";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<{ url: string; title: string } | null>(null);
+  const headerRef = useScrollAnimation();
 
   return (
     <div className="min-h-screen section-padding">
       <div className="container-wide">
-        <div className="text-center mb-8">
+        <div ref={headerRef.ref} className={`text-center mb-8 scroll-animate ${headerRef.isVisible ? 'visible' : ''}`}>
           <h1 className="mb-2">Our Work Gallery</h1>
           <p className="text-muted-foreground text-sm">
             See our professional AC installation, servicing, and repair work

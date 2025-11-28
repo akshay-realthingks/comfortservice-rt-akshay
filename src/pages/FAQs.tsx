@@ -8,9 +8,11 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { faqItems } from "@/data/staticData";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const FAQs = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const headerRef = useScrollAnimation();
 
   const categories = [...new Set(faqItems.map((faq) => faq.category))];
   const filteredFaqs = selectedCategory
@@ -20,7 +22,7 @@ const FAQs = () => {
   return (
     <div className="min-h-screen section-padding">
       <div className="container-narrow">
-        <div className="text-center mb-8">
+        <div ref={headerRef.ref} className={`text-center mb-8 scroll-animate ${headerRef.isVisible ? 'visible' : ''}`}>
           <h1 className="mb-2">Frequently Asked Questions</h1>
           <p className="text-muted-foreground text-sm">
             Find answers to common questions about our AC services

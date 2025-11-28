@@ -1,11 +1,14 @@
 import { ServiceCard } from "@/components/ServiceCard";
 import { SERVICES } from "@/config/contact";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Services = () => {
+  const headerRef = useScrollAnimation();
+
   return (
     <div className="min-h-screen section-padding">
       <div className="container-wide">
-        <div className="text-center mb-8">
+        <div ref={headerRef.ref} className={`text-center mb-8 scroll-animate ${headerRef.isVisible ? 'visible' : ''}`}>
           <h1 className="mb-2">Our AC Services</h1>
           <p className="text-muted-foreground max-w-xl mx-auto text-sm">
             Comprehensive air conditioning services for homes and offices in Pune & PCMC.

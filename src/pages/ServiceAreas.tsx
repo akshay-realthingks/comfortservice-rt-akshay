@@ -4,9 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { MessageCircle } from "lucide-react";
 import { CONTACT_INFO } from "@/config/contact";
 import { serviceAreas } from "@/data/staticData";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const ServiceAreas = () => {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
+  const headerRef = useScrollAnimation();
 
   const cities = [...new Set(serviceAreas.map((area) => area.city))];
   const filteredAreas = selectedCity
@@ -21,7 +23,7 @@ const ServiceAreas = () => {
   return (
     <div className="min-h-screen section-padding">
       <div className="container-wide">
-        <div className="text-center mb-8">
+        <div ref={headerRef.ref} className={`text-center mb-8 scroll-animate ${headerRef.isVisible ? 'visible' : ''}`}>
           <h1 className="mb-2">Service Areas</h1>
           <p className="text-muted-foreground max-w-xl mx-auto text-sm">
             We proudly serve homes and businesses across Pune and Pimpri Chinchwad.

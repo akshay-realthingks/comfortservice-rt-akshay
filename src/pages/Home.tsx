@@ -5,8 +5,14 @@ import { ServiceCard } from "@/components/ServiceCard";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { CONTACT_INFO, SERVICES } from "@/config/contact";
 import { testimonials } from "@/data/staticData";
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 
 const Home = () => {
+  const servicesRef = useScrollAnimation();
+  const whyUsRef = useScrollAnimation();
+  const processRef = useScrollAnimation();
+  const testimonialsRef = useScrollAnimation();
+
   const handleCall = () => {
     window.location.href = `tel:${CONTACT_INFO.phone}`;
   };
@@ -51,7 +57,9 @@ const Home = () => {
       {/* Key Services */}
       <section className="section-padding">
         <div className="container-wide">
-          <h2 className="text-center mb-8">Our Services</h2>
+          <div ref={servicesRef.ref} className={`scroll-animate ${servicesRef.isVisible ? 'visible' : ''}`}>
+            <h2 className="text-center mb-8">Our Services</h2>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {SERVICES.slice(0, 6).map((service) => (
               <ServiceCard
@@ -73,7 +81,9 @@ const Home = () => {
       {/* Why Choose Us */}
       <section className="section-padding bg-accent">
         <div className="container-wide">
-          <h2 className="text-center mb-8">Why Choose Us</h2>
+          <div ref={whyUsRef.ref} className={`scroll-animate ${whyUsRef.isVisible ? 'visible' : ''}`}>
+            <h2 className="text-center mb-8">Why Choose Us</h2>
+          </div>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
@@ -112,7 +122,9 @@ const Home = () => {
       {/* Process Steps */}
       <section className="section-padding">
         <div className="container-narrow">
-          <h2 className="text-center mb-8">How It Works</h2>
+          <div ref={processRef.ref} className={`scroll-animate ${processRef.isVisible ? 'visible' : ''}`}>
+            <h2 className="text-center mb-8">How It Works</h2>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { step: "1", title: "Book Online or Call", desc: "Schedule via website or phone" },
@@ -135,7 +147,9 @@ const Home = () => {
       {/* Testimonials */}
       <section className="section-padding bg-accent">
         <div className="container-wide">
-          <h2 className="text-center mb-8">What Our Customers Say</h2>
+          <div ref={testimonialsRef.ref} className={`scroll-animate ${testimonialsRef.isVisible ? 'visible' : ''}`}>
+            <h2 className="text-center mb-8">What Our Customers Say</h2>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {homeTestimonials.map((testimonial) => (
               <TestimonialCard

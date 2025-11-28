@@ -5,7 +5,7 @@ export const CONTACT_INFO = {
   phone2: "+91 82083 46628",
   whatsapp: "917745046520", // No spaces or dashes for WhatsApp API
   email: "comforttechnicalservice8@gmail.com",
-  address: "Sr. No. 179, Flat No. 03, Panchatara Nagar, Akurdi, Pune, Maharashtra - 411035",
+  address: "COMFORT TECHNICAL SERVICES, NIKHIL NIWAS, SURVEY NO.179, SHOP NO-02, FIRST FLOOR, NEAR GA, Pune, PIMPRI CHINCHWAD, MH 411035",
   gstin: "27HEKPS5234F1Z4",
   pan: "HEKPS5234F",
   workingHours: "Open 24 Hours",

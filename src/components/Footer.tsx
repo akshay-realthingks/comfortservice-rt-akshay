@@ -94,6 +94,7 @@ export const Footer = () => {
 
         <div className="border-t border-background/10 mt-8 pt-6 text-center text-xs opacity-60">
           <p>© {new Date().getFullYear()} {CONTACT_INFO.companyName}. All rights reserved.</p>
+          <p className="mt-1 text-[10px] opacity-50">Powered by RealThingks</p>
         </div>
       </div>
     </footer>
