@@ -167,47 +167,54 @@ export const testimonials = [
   }
 ];
 
+import acIndoorCleaning from "@/assets/gallery/ac-indoor-cleaning.jpg";
+import outdoorCondenserCleaning from "@/assets/gallery/outdoor-condenser-cleaning.jpg";
+import gasPressureCheck from "@/assets/gallery/gas-pressure-check.jpg";
+import acInstallation from "@/assets/gallery/ac-installation.jpg";
+import componentRepair from "@/assets/gallery/component-repair.jpg";
+import maintenanceInspection from "@/assets/gallery/maintenance-inspection.jpg";
+
 export const galleryImages = [
   {
     id: "1",
-    title: "Split AC Installation",
-    image_url: "https://images.unsplash.com/photo-1628744448840-55bdb2497bd4?w=800&auto=format&fit=crop&q=80",
-    description: "Professional split AC installation in residential apartment",
+    title: "AC Indoor Unit Cleaning",
+    image_url: acIndoorCleaning,
+    description: "Professional cleaning of indoor AC unit, including filters and internal components for optimal performance",
     created_at: "2024-01-10"
   },
   {
     id: "2",
-    title: "AC Deep Cleaning Service",
-    image_url: "https://images.unsplash.com/photo-1604754742629-3e5728249d73?w=800&auto=format&fit=crop&q=80",
-    description: "Thorough deep cleaning of AC unit including coils and filters",
+    title: "Outdoor Condenser Cleaning",
+    image_url: outdoorCondenserCleaning,
+    description: "Expert outdoor unit maintenance with specialized cleaning of condenser coils and fins",
     created_at: "2024-01-12"
   },
   {
     id: "3",
-    title: "AC Repair Work",
-    image_url: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=800&auto=format&fit=crop&q=80",
-    description: "Expert technician performing AC repair and troubleshooting",
+    title: "Gas Pressure Check",
+    image_url: gasPressureCheck,
+    description: "Precise refrigerant gas pressure testing using professional manifold gauges for accurate diagnostics",
     created_at: "2024-01-15"
   },
   {
     id: "4",
-    title: "Commercial AC Maintenance",
-    image_url: "https://images.unsplash.com/photo-1562184552-50b79f8de52e?w=800&auto=format&fit=crop&q=80",
-    description: "Office and commercial AC maintenance service",
+    title: "AC Installation Process",
+    image_url: acInstallation,
+    description: "Professional split AC installation by experienced technicians ensuring proper mounting and setup",
     created_at: "2024-01-18"
   },
   {
     id: "5",
-    title: "AC Gas Refilling",
-    image_url: "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=800&auto=format&fit=crop&q=80",
-    description: "Professional gas refilling and pressure check service",
+    title: "Component Repair",
+    image_url: componentRepair,
+    description: "Skilled technician repairing internal AC components including circuit boards and electrical connections",
     created_at: "2024-01-20"
   },
   {
     id: "6",
-    title: "Window AC Service",
-    image_url: "https://images.unsplash.com/photo-1578496781197-b85385c7f0b3?w=800&auto=format&fit=crop&q=80",
-    description: "Complete servicing of window AC unit",
+    title: "Routine Maintenance Inspection",
+    image_url: maintenanceInspection,
+    description: "Comprehensive AC maintenance inspection with modern diagnostic tools and documentation",
     created_at: "2024-01-22"
   }
 ];
