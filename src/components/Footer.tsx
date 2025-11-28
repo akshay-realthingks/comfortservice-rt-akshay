@@ -8,7 +8,7 @@ export const Footer = () => {
   };
   return <footer className="bg-foreground text-background">
       <div className="container-wide py-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Company Info */}
           <div>
             <h3 className="font-semibold mb-3">{CONTACT_INFO.companyName}</h3>
@@ -20,42 +20,6 @@ export const Footer = () => {
               <span>{CONTACT_INFO.address}</span>
             </div>
             {CONTACT_INFO.gstin && <p className="text-xs opacity-60 mt-2">GSTIN: {CONTACT_INFO.gstin}</p>}
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-semibold mb-3">Quick Links</h3>
-            <ul className="space-y-1.5 text-sm">
-              {[{
-              to: "/",
-              label: "Home"
-            }, {
-              to: "/services",
-              label: "Services"
-            }, {
-              to: "/pricing",
-              label: "Pricing"
-            }, {
-              to: "/amc",
-              label: "AMC Plans"
-            }, {
-              to: "/service-areas",
-              label: "Service Areas"
-            }, {
-              to: "/about",
-              label: "About"
-            }, {
-              to: "/faqs",
-              label: "FAQs"
-            }, {
-              to: "/contact",
-              label: "Contact"
-            }].map(link => <li key={link.to}>
-                  <Link to={link.to} className="opacity-80 hover:opacity-100 transition-opacity">
-                    {link.label}
-                  </Link>
-                </li>)}
-            </ul>
           </div>
 
           {/* Contact Info */}
@@ -78,7 +42,6 @@ export const Footer = () => {
                 <Mail className="w-4 h-4" />
                 {CONTACT_INFO.email}
               </a>
-              <p className="opacity-70 pt-1 text-xs">{CONTACT_INFO.workingHours}</p>
             </div>
           </div>
         </div>
