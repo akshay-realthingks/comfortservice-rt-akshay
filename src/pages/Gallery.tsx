@@ -1,19 +1,73 @@
 import { useState, useEffect } from "react";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { galleryImages } from "@/data/staticData";
 import { GalleryImageSkeleton } from "@/components/GalleryImageSkeleton";
+import { LazyImage } from "@/components/LazyImage";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Gallery = () => {
-  const [selectedImage, setSelectedImage] = useState<{ url: string; title: string } | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [lightboxImageLoading, setLightboxImageLoading] = useState(false);
   const headerRef = useScrollAnimation();
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 300);
     return () => clearTimeout(timer);
   }, []);
+
+  // Preload adjacent images
+  useEffect(() => {
+    if (selectedImageIndex === null) return;
+
+    const preloadImage = (index: number) => {
+      if (index >= 0 && index < galleryImages.length) {
+        const img = new Image();
+        img.src = galleryImages[index].image_url;
+      }
+    };
+
+    // Preload previous and next images
+    preloadImage(selectedImageIndex - 1);
+    preloadImage(selectedImageIndex + 1);
+  }, [selectedImageIndex]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    if (selectedImageIndex === null) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelectedImageIndex(null);
+      } else if (e.key === "ArrowLeft") {
+        handlePrevious();
+      } else if (e.key === "ArrowRight") {
+        handleNext();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedImageIndex]);
+
+  const handlePrevious = () => {
+    if (selectedImageIndex === null) return;
+    setLightboxImageLoading(true);
+    setSelectedImageIndex((prev) => 
+      prev === null || prev === 0 ? galleryImages.length - 1 : prev - 1
+    );
+  };
+
+  const handleNext = () => {
+    if (selectedImageIndex === null) return;
+    setLightboxImageLoading(true);
+    setSelectedImageIndex((prev) => 
+      prev === null || prev === galleryImages.length - 1 ? 0 : prev + 1
+    );
+  };
+
+  const selectedImage = selectedImageIndex !== null ? galleryImages[selectedImageIndex] : null;
 
   return (
     <div className="min-h-screen section-padding">
@@ -50,13 +104,12 @@ const Gallery = () => {
                   visible: { opacity: 1, scale: 1 }
                 }}
                 transition={{ duration: 0.4 }}
-                className="group relative overflow-hidden rounded-lg cursor-pointer aspect-[4/3]"
-                onClick={() => setSelectedImage({ url: image.image_url, title: image.title || "Gallery Image" })}
+                className="group relative overflow-hidden rounded-lg cursor-pointer"
+                onClick={() => setSelectedImageIndex(index)}
               >
-                <img
+                <LazyImage
                   src={image.image_url}
                   alt={image.title || "AC Service"}
-                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-end">
@@ -77,15 +130,19 @@ const Gallery = () => {
           {selectedImage && (
             <motion.div
               className="fixed inset-0 bg-foreground/95 z-50 flex items-center justify-center p-4"
-              onClick={() => setSelectedImage(null)}
+              onClick={() => setSelectedImageIndex(null)}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
             >
+              {/* Close Button */}
               <motion.button
-                className="absolute top-4 right-4 text-background hover:text-background/70 transition-colors"
-                onClick={() => setSelectedImage(null)}
+                className="absolute top-4 right-4 text-background hover:text-background/70 transition-colors z-10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedImageIndex(null);
+                }}
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
                 exit={{ scale: 0, rotate: 180 }}
@@ -93,20 +150,65 @@ const Gallery = () => {
               >
                 <X className="w-6 h-6" />
               </motion.button>
+
+              {/* Previous Button */}
+              <motion.button
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-background hover:text-background/70 transition-colors bg-foreground/50 rounded-full p-2 z-10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePrevious();
+                }}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </motion.button>
+
+              {/* Next Button */}
+              <motion.button
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-background hover:text-background/70 transition-colors bg-foreground/50 rounded-full p-2 z-10"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNext();
+                }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronRight className="w-6 h-6" />
+              </motion.button>
+
+              {/* Image Container */}
               <motion.div 
-                className="max-w-3xl max-h-[90vh] flex flex-col items-center"
+                className="max-w-4xl max-h-[90vh] flex flex-col items-center relative"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
                 transition={{ duration: 0.3 }}
+                onClick={(e) => e.stopPropagation()}
               >
+                {lightboxImageLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-8 h-8 border-4 border-background/30 border-t-background rounded-full animate-spin" />
+                  </div>
+                )}
                 <img
-                  src={selectedImage.url}
-                  alt={selectedImage.title}
-                  loading="eager"
-                  className="max-w-full max-h-[80vh] object-contain rounded-lg"
+                  src={selectedImage.image_url}
+                  alt={selectedImage.title || "Gallery Image"}
+                  className={`max-w-full max-h-[80vh] object-contain rounded-lg transition-opacity duration-300 ${
+                    lightboxImageLoading ? 'opacity-0' : 'opacity-100'
+                  }`}
+                  onLoad={() => setLightboxImageLoading(false)}
                 />
-                <p className="text-background mt-3 text-center text-sm">{selectedImage.title}</p>
+                <div className="text-background mt-3 text-center">
+                  <p className="text-sm font-medium">{selectedImage.title}</p>
+                  <p className="text-xs opacity-70 mt-1">
+                    {selectedImageIndex !== null && `${selectedImageIndex + 1} / ${galleryImages.length}`}
+                  </p>
+                </div>
               </motion.div>
             </motion.div>
           )}
