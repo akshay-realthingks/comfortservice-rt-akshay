@@ -3,7 +3,6 @@ import { Link, useLocation } from "react-router-dom";
 import { Phone, MessageCircle, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CONTACT_INFO } from "@/config/contact";
-import logo from "@/assets/logo.png";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +36,9 @@ export const Navbar = () => {
       <div className="container-wide">
         <div className="flex justify-between items-center h-14">
           <Link to="/" className="hover:opacity-80 transition-opacity flex-shrink-0">
-            <img src={logo} alt={CONTACT_INFO.companyName} className="h-9 w-auto" />
+            <span className="text-base font-semibold text-foreground">
+              {CONTACT_INFO.companyName}
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
