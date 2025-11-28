@@ -40,19 +40,55 @@ const Contact = () => {
       return;
     }
 
-    // Build WhatsApp message with form details
-    const message = `*New Service Booking Request*%0A%0A` +
-      `*Name:* ${formData.name}%0A` +
-      `*Phone:* ${formData.phone}%0A` +
-      `${formData.email ? `*Email:* ${formData.email}%0A` : ''}` +
-      `*Service:* ${formData.serviceType}%0A` +
-      `*AC Type:* ${formData.acType}%0A` +
-      `*Units:* ${formData.units}%0A` +
-      `${formData.preferredDate ? `*Preferred Date:* ${formData.preferredDate}%0A` : ''}` +
-      `${formData.preferredTimeSlot ? `*Time Slot:* ${formData.preferredTimeSlot}%0A` : ''}` +
-      `*Address:* ${formData.address}, ${formData.city}${formData.pincode ? ` - ${formData.pincode}` : ''}%0A` +
-      `*Contact Via:* ${formData.preferredContactMode}%0A` +
-      `${formData.notes ? `*Notes:* ${formData.notes}` : ''}`;
+    // Validate phone number (10 digits)
+    if (!/^\d{10}$/.test(formData.phone)) {
+      toast.error("Please enter a valid 10-digit mobile number");
+      return;
+    }
+
+    // Validate pincode if provided (6 digits)
+    if (formData.pincode && !/^\d{6}$/.test(formData.pincode)) {
+      toast.error("Please enter a valid 6-digit pincode");
+      return;
+    }
+
+    // Build WhatsApp message with properly encoded form details
+    const messageParts = [
+      "*New Service Booking Request*",
+      "",
+      `*Name:* ${encodeURIComponent(formData.name)}`,
+      `*Phone:* ${encodeURIComponent(formData.phone)}`,
+    ];
+
+    if (formData.email) {
+      messageParts.push(`*Email:* ${encodeURIComponent(formData.email)}`);
+    }
+
+    messageParts.push(
+      `*Service:* ${encodeURIComponent(formData.serviceType)}`,
+      `*AC Type:* ${encodeURIComponent(formData.acType)}`,
+      `*Units:* ${encodeURIComponent(formData.units)}`
+    );
+
+    if (formData.preferredDate) {
+      messageParts.push(`*Preferred Date:* ${encodeURIComponent(formData.preferredDate)}`);
+    }
+
+    if (formData.preferredTimeSlot) {
+      messageParts.push(`*Time Slot:* ${encodeURIComponent(formData.preferredTimeSlot)}`);
+    }
+
+    const fullAddress = `${formData.address}, ${formData.city}${formData.pincode ? ` - ${formData.pincode}` : ''}`;
+    messageParts.push(
+      `*Address:* ${encodeURIComponent(fullAddress)}`,
+      `*Contact Via:* ${encodeURIComponent(formData.preferredContactMode)}`
+    );
+
+    if (formData.notes) {
+      messageParts.push(`*Notes:* ${encodeURIComponent(formData.notes)}`);
+    }
+
+    const message = messageParts.join("%0A");
 
     // Open WhatsApp with pre-filled message
     window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=${message}`, "_blank");
