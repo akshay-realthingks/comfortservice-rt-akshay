@@ -6,9 +6,13 @@ import { TestimonialCard } from "@/components/TestimonialCard";
 import { CONTACT_INFO, SERVICES } from "@/config/contact";
 import { testimonials } from "@/data/staticData";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const Home = () => {
+  const { scrollY } = useScroll();
+  const heroY = useTransform(scrollY, [0, 500], [0, 150]);
+  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
+
   const servicesRef = useScrollAnimation();
   const whyUsRef = useScrollAnimation();
   const processRef = useScrollAnimation();
@@ -28,8 +32,11 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-accent section-padding">
-        <div className="container-wide">
+      <section className="bg-accent section-padding relative overflow-hidden">
+        <motion.div 
+          className="container-wide relative z-10"
+          style={{ y: heroY, opacity: heroOpacity }}
+        >
           <div className="text-center max-w-2xl mx-auto">
             <h1 className="mb-3">Fast, Reliable AC Service in Pune & PCMC</h1>
             <p className="text-muted-foreground mb-6">
@@ -52,7 +59,7 @@ const Home = () => {
               </Button>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Key Services */}
