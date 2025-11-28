@@ -41,18 +41,18 @@ const About = () => {
         <div className="mb-12">
           <h2 className="text-center mb-8">Our Journey</h2>
           <div className="relative max-w-3xl mx-auto">
-            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-border md:-translate-x-px" />
+            <div className="absolute left-3 sm:left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-border md:-translate-x-px" />
             {milestones.map((milestone, index) => (
               <div key={milestone.year} className={`relative flex items-start mb-6 last:mb-0 ${index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}>
-                <div className={`ml-10 md:ml-0 md:w-1/2 ${index % 2 === 0 ? "md:pr-8 md:text-right" : "md:pl-8"}`}>
-                  <div className="bg-card border border-border rounded-lg p-4 card-hover">
+                <div className={`ml-8 sm:ml-10 md:ml-0 md:w-1/2 ${index % 2 === 0 ? "md:pr-8 md:text-right" : "md:pl-8"}`}>
+                  <div className="bg-card border border-border rounded-lg p-3 sm:p-4 card-hover">
                     <span className="inline-block px-2 py-0.5 bg-primary/10 text-primary text-xs font-medium rounded mb-1">{milestone.year}</span>
                     <h3 className="text-sm font-semibold mb-1">{milestone.title}</h3>
                     <p className="text-xs text-muted-foreground">{milestone.description}</p>
                   </div>
                 </div>
-                <div className="absolute left-4 md:left-1/2 w-8 h-8 bg-primary rounded-full flex items-center justify-center -translate-x-1/2 border-4 border-background">
-                  <milestone.icon className="w-3.5 h-3.5 text-primary-foreground" />
+                <div className="absolute left-3 sm:left-4 md:left-1/2 w-6 h-6 sm:w-8 sm:h-8 bg-primary rounded-full flex items-center justify-center -translate-x-1/2 border-2 sm:border-4 border-background">
+                  <milestone.icon className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary-foreground" />
                 </div>
                 <div className="hidden md:block md:w-1/2" />
               </div>

@@ -84,7 +84,7 @@ const Home = () => {
           <div ref={whyUsRef.ref} className={`scroll-animate ${whyUsRef.isVisible ? 'visible' : ''}`}>
             <h2 className="text-center mb-8">Why Choose Us</h2>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
               {
                 icon: Users,
@@ -125,7 +125,7 @@ const Home = () => {
           <div ref={processRef.ref} className={`scroll-animate ${processRef.isVisible ? 'visible' : ''}`}>
             <h2 className="text-center mb-8">How It Works</h2>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { step: "1", title: "Book Online or Call", desc: "Schedule via website or phone" },
               { step: "2", title: "Technician Visits", desc: "Expert arrives at your location" },

@@ -59,9 +59,9 @@ const Pricing = () => {
               <CardContent>
                 <div className="divide-y divide-border">
                   {category.items.map((item, idx) => (
-                    <div key={idx} className="flex items-center justify-between py-3 first:pt-0 last:pb-0">
+                    <div key={idx} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 py-3 first:pt-0 last:pb-0">
                       <span className="text-sm font-medium">{item.name}</span>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-between sm:justify-end gap-2">
                         <span className="text-primary font-semibold text-sm">{item.price}</span>
                         <div className="flex gap-1">
                           <Button asChild size="sm" variant="outline" className="h-7 px-2 text-xs">
