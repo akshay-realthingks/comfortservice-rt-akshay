@@ -1,5 +1,6 @@
 import { Users, Award, Clock, ThumbsUp, Building2, FileText, Shield, Rocket, Target, Star, TrendingUp } from "lucide-react";
 import { CONTACT_INFO } from "@/config/contact";
+import { motion } from "framer-motion";
 
 const About = () => {
   const stats = [
@@ -60,15 +61,33 @@ const About = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+        <motion.div 
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={{
+            visible: {
+              transition: { staggerChildren: 0.1 }
+            }
+          }}
+        >
           {stats.map((stat, index) => (
-            <div key={index} className="text-center p-4 bg-card rounded-lg border border-border">
+            <motion.div
+              key={index}
+              variants={{
+                hidden: { opacity: 0, scale: 0.8 },
+                visible: { opacity: 1, scale: 1 }
+              }}
+              transition={{ duration: 0.4 }}
+              className="text-center p-4 bg-card rounded-lg border border-border"
+            >
               <stat.icon className="w-6 h-6 text-primary mx-auto mb-2" />
               <div className="text-2xl font-bold text-primary mb-0.5">{stat.value}</div>
               <div className="text-xs text-muted-foreground">{stat.label}</div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <div className="mb-12">
           <h2 className="text-center mb-8">Our Values</h2>

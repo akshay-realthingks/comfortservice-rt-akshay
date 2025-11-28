@@ -2,6 +2,7 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import { galleryImages } from "@/data/staticData";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<{ url: string; title: string } | null>(null);
@@ -17,10 +18,24 @@ const Gallery = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-          {galleryImages.map((image) => (
-              <div
+        <motion.div 
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            visible: {
+              transition: { staggerChildren: 0.08 }
+            }
+          }}
+        >
+          {galleryImages.map((image, index) => (
+              <motion.div
                 key={image.id}
+                variants={{
+                  hidden: { opacity: 0, scale: 0.9 },
+                  visible: { opacity: 1, scale: 1 }
+                }}
+                transition={{ duration: 0.4 }}
                 className="group relative overflow-hidden rounded-lg cursor-pointer aspect-[4/3]"
                 onClick={() => setSelectedImage({ url: image.image_url, title: image.title || "Gallery Image" })}
               >
@@ -37,32 +52,48 @@ const Gallery = () => {
                     )}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
 
         {/* Lightbox */}
-        {selectedImage && (
-          <div
-            className="fixed inset-0 bg-foreground/95 z-50 flex items-center justify-center p-4 animate-fade-in"
-            onClick={() => setSelectedImage(null)}
-          >
-            <button
-              className="absolute top-4 right-4 text-background hover:text-background/70 transition-colors"
+        <AnimatePresence>
+          {selectedImage && (
+            <motion.div
+              className="fixed inset-0 bg-foreground/95 z-50 flex items-center justify-center p-4"
               onClick={() => setSelectedImage(null)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
             >
-              <X className="w-6 h-6" />
-            </button>
-            <div className="max-w-3xl max-h-[90vh] flex flex-col items-center">
-              <img
-                src={selectedImage.url}
-                alt={selectedImage.title}
-                className="max-w-full max-h-[80vh] object-contain rounded-lg"
-              />
-              <p className="text-background mt-3 text-center text-sm">{selectedImage.title}</p>
-            </div>
-          </div>
-        )}
+              <motion.button
+                className="absolute top-4 right-4 text-background hover:text-background/70 transition-colors"
+                onClick={() => setSelectedImage(null)}
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                exit={{ scale: 0, rotate: 180 }}
+                transition={{ duration: 0.3 }}
+              >
+                <X className="w-6 h-6" />
+              </motion.button>
+              <motion.div 
+                className="max-w-3xl max-h-[90vh] flex flex-col items-center"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <img
+                  src={selectedImage.url}
+                  alt={selectedImage.title}
+                  className="max-w-full max-h-[80vh] object-contain rounded-lg"
+                />
+                <p className="text-background mt-3 text-center text-sm">{selectedImage.title}</p>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

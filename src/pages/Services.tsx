@@ -1,6 +1,7 @@
 import { ServiceCard } from "@/components/ServiceCard";
 import { SERVICES } from "@/config/contact";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { motion } from "framer-motion";
 
 const Services = () => {
   const headerRef = useScrollAnimation();
@@ -16,16 +17,33 @@ const Services = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {SERVICES.map((service) => (
-            <ServiceCard
+        <motion.div 
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            visible: {
+              transition: { staggerChildren: 0.08 }
+            }
+          }}
+        >
+          {SERVICES.map((service, index) => (
+            <motion.div
               key={service.id}
-              name={service.name}
-              description={service.description}
-              startingPrice={service.startingPrice}
-            />
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 }
+              }}
+              transition={{ duration: 0.4 }}
+            >
+              <ServiceCard
+                name={service.name}
+                description={service.description}
+                startingPrice={service.startingPrice}
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <div className="mt-10 bg-accent rounded-lg p-6 text-center">
           <h2 className="mb-2">Additional Services Available</h2>

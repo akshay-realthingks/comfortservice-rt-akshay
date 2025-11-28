@@ -9,6 +9,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { faqItems } from "@/data/staticData";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { motion, AnimatePresence } from "framer-motion";
 
 const FAQs = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -51,18 +52,35 @@ const FAQs = () => {
         </div>
 
         {/* FAQs */}
-        <Accordion type="single" collapsible className="w-full">
-          {filteredFaqs.map((faq, index) => (
-            <AccordionItem key={faq.id} value={`item-${index}`}>
-              <AccordionTrigger className="text-sm text-left py-3">
-                {faq.question}
-              </AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground pb-4">
-                {faq.answer}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={selectedCategory || "all"}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Accordion type="single" collapsible className="w-full">
+              {filteredFaqs.map((faq, index) => (
+                <motion.div
+                  key={faq.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05, duration: 0.3 }}
+                >
+                  <AccordionItem value={`item-${index}`}>
+                    <AccordionTrigger className="text-sm text-left py-3">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-sm text-muted-foreground pb-4">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                </motion.div>
+              ))}
+            </Accordion>
+          </motion.div>
+        </AnimatePresence>
 
         {/* Contact Section */}
         <div className="mt-10 bg-accent rounded-lg p-6 text-center">

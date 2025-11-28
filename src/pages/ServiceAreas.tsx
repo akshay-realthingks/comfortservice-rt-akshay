@@ -5,6 +5,7 @@ import { MessageCircle } from "lucide-react";
 import { CONTACT_INFO } from "@/config/contact";
 import { serviceAreas } from "@/data/staticData";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ServiceAreas = () => {
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
@@ -52,13 +53,29 @@ const ServiceAreas = () => {
         </div>
 
         {/* Areas List */}
-        <div className="flex flex-wrap gap-2 justify-center">
-          {filteredAreas.map((area) => (
-            <Badge key={area.id} variant="secondary" className="px-3 py-1.5 text-xs">
-              {area.area_name}
-            </Badge>
-          ))}
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div 
+            key={selectedCity || "all"}
+            className="flex flex-wrap gap-2 justify-center"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+          >
+            {filteredAreas.map((area, index) => (
+              <motion.div
+                key={area.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.02, duration: 0.3 }}
+              >
+                <Badge variant="secondary" className="px-3 py-1.5 text-xs">
+                  {area.area_name}
+                </Badge>
+              </motion.div>
+            ))}
+          </motion.div>
+        </AnimatePresence>
 
         {/* Not Listed Section */}
         <div className="mt-10 bg-accent rounded-lg p-6 text-center">

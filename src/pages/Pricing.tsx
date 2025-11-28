@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { CONTACT_INFO } from "@/config/contact";
+import { motion } from "framer-motion";
 
 const Pricing = () => {
   const handleWhatsApp = (service: string) => {
@@ -49,9 +50,26 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="space-y-4">
+        <motion.div 
+          className="space-y-4"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            visible: {
+              transition: { staggerChildren: 0.1 }
+            }
+          }}
+        >
           {pricingData.map((category, index) => (
-            <Card key={index}>
+            <motion.div
+              key={index}
+              variants={{
+                hidden: { opacity: 0, x: -20 },
+                visible: { opacity: 1, x: 0 }
+              }}
+              transition={{ duration: 0.4 }}
+            >
+              <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg">{category.category}</CardTitle>
                 <CardDescription className="text-xs">Professional service with warranty included</CardDescription>
@@ -82,8 +100,9 @@ const Pricing = () => {
                 </div>
               </CardContent>
             </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <div className="mt-8 grid md:grid-cols-2 gap-4">
           <div className="bg-accent rounded-lg p-5">

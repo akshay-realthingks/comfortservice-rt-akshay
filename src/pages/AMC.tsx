@@ -9,6 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { motion } from "framer-motion";
 
 const AMC = () => {
   const handleWhatsApp = (planName: string) => {
@@ -42,9 +43,26 @@ const AMC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-10">
+        <motion.div 
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-10"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            visible: {
+              transition: { staggerChildren: 0.12 }
+            }
+          }}
+        >
           {AMC_PLANS.map((plan, index) => (
-            <Card
+            <motion.div
+              key={index}
+              variants={{
+                hidden: { opacity: 0, scale: 0.9 },
+                visible: { opacity: 1, scale: 1 }
+              }}
+              transition={{ duration: 0.4 }}
+            >
+              <Card
               key={index}
               className={`card-hover ${plan.popular ? "border-primary shadow-md ring-1 ring-primary/20" : ""}`}
             >
@@ -81,8 +99,9 @@ const AMC = () => {
                 </Button>
               </CardFooter>
             </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         <div className="bg-accent rounded-lg p-5 mb-8">
           <h2 className="mb-4">AMC Benefits</h2>
