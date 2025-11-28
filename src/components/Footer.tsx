@@ -1,15 +1,12 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, MessageCircle } from "lucide-react";
 import { CONTACT_INFO } from "@/config/contact";
-
 export const Footer = () => {
   const handleWhatsApp = () => {
     const message = encodeURIComponent("Hello! I have a question.");
     window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=${message}`, "_blank");
   };
-
-  return (
-    <footer className="bg-foreground text-background">
+  return <footer className="bg-foreground text-background">
       <div className="container-wide py-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Company Info */}
@@ -22,34 +19,42 @@ export const Footer = () => {
               <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
               <span>{CONTACT_INFO.address}</span>
             </div>
-            {CONTACT_INFO.gstin && (
-              <p className="text-xs opacity-60 mt-2">GSTIN: {CONTACT_INFO.gstin}</p>
-            )}
+            {CONTACT_INFO.gstin && <p className="text-xs opacity-60 mt-2">GSTIN: {CONTACT_INFO.gstin}</p>}
           </div>
 
           {/* Quick Links */}
           <div>
             <h3 className="font-semibold mb-3">Quick Links</h3>
             <ul className="space-y-1.5 text-sm">
-              {[
-                { to: "/", label: "Home" },
-                { to: "/services", label: "Services" },
-                { to: "/pricing", label: "Pricing" },
-                { to: "/amc", label: "AMC Plans" },
-                { to: "/service-areas", label: "Service Areas" },
-                { to: "/about", label: "About" },
-                { to: "/faqs", label: "FAQs" },
-                { to: "/contact", label: "Contact" }
-              ].map((link) => (
-                <li key={link.to}>
-                  <Link
-                    to={link.to}
-                    className="opacity-80 hover:opacity-100 transition-opacity"
-                  >
+              {[{
+              to: "/",
+              label: "Home"
+            }, {
+              to: "/services",
+              label: "Services"
+            }, {
+              to: "/pricing",
+              label: "Pricing"
+            }, {
+              to: "/amc",
+              label: "AMC Plans"
+            }, {
+              to: "/service-areas",
+              label: "Service Areas"
+            }, {
+              to: "/about",
+              label: "About"
+            }, {
+              to: "/faqs",
+              label: "FAQs"
+            }, {
+              to: "/contact",
+              label: "Contact"
+            }].map(link => <li key={link.to}>
+                  <Link to={link.to} className="opacity-80 hover:opacity-100 transition-opacity">
                     {link.label}
                   </Link>
-                </li>
-              ))}
+                </li>)}
             </ul>
           </div>
 
@@ -57,33 +62,19 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold mb-3">Contact Us</h3>
             <div className="space-y-2 text-sm">
-              <a
-                href={`tel:${CONTACT_INFO.phone}`}
-                className="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"
-              >
+              <a href={`tel:${CONTACT_INFO.phone}`} className="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
                 <Phone className="w-4 h-4" />
                 {CONTACT_INFO.phone}
               </a>
-              {CONTACT_INFO.phone2 && (
-                <a
-                  href={`tel:${CONTACT_INFO.phone2}`}
-                  className="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"
-                >
+              {CONTACT_INFO.phone2 && <a href={`tel:${CONTACT_INFO.phone2}`} className="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
                   <Phone className="w-4 h-4" />
                   {CONTACT_INFO.phone2}
-                </a>
-              )}
-              <button
-                onClick={handleWhatsApp}
-                className="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"
-              >
+                </a>}
+              <button onClick={handleWhatsApp} className="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
                 <MessageCircle className="w-4 h-4" />
                 WhatsApp Us
               </button>
-              <a
-                href={`mailto:${CONTACT_INFO.email}`}
-                className="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"
-              >
+              <a href={`mailto:${CONTACT_INFO.email}`} className="flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
                 <Mail className="w-4 h-4" />
                 {CONTACT_INFO.email}
               </a>
@@ -94,9 +85,8 @@ export const Footer = () => {
 
         <div className="border-t border-background/10 mt-8 pt-6 text-center text-xs opacity-60">
           <p>© {new Date().getFullYear()} {CONTACT_INFO.companyName}. All rights reserved.</p>
-          <p className="mt-1 text-[10px] opacity-50">Powered by RealThingks</p>
+          
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
