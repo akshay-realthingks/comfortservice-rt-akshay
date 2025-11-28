@@ -17,25 +17,26 @@ export const ServiceCard = ({ name, description, startingPrice }: ServiceCardPro
   };
 
   return (
-    <Card className="h-full card-hover">
+    <Card className="h-full card-hover flex flex-col">
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg">{name}</CardTitle>
+        <CardTitle className="text-base">{name}</CardTitle>
+        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{description}</p>
       </CardHeader>
-      <CardContent className="pb-3">
-        <p className="text-sm text-muted-foreground mb-3">{description}</p>
-        <p className="text-xl font-bold text-primary">
+      <CardContent className="pb-3 flex-1">
+        <p className="text-sm font-semibold text-primary">
           {startingPrice}
-          {startingPrice.includes("₹") && (
+          {startingPrice.includes("₹") && !startingPrice.includes("onwards") && (
             <span className="text-xs font-normal text-muted-foreground ml-1">onwards</span>
           )}
         </p>
       </CardContent>
       <CardFooter className="gap-2 pt-0">
-        <Button asChild size="sm" className="flex-1">
+        <Button asChild size="sm" className="flex-1 h-8 text-xs">
           <Link to="/contact">Book Now</Link>
         </Button>
-        <Button variant="outline" size="icon" className="h-8 w-8" onClick={handleWhatsApp}>
-          <MessageCircle className="w-4 h-4" />
+        <Button variant="outline" size="sm" className="gap-1.5 h-8" onClick={handleWhatsApp}>
+          <MessageCircle className="w-3.5 h-3.5" />
+          <span className="text-xs">Ask</span>
         </Button>
       </CardFooter>
     </Card>
