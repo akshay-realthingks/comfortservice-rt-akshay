@@ -56,6 +56,7 @@ const Gallery = () => {
                 <img
                   src={image.image_url}
                   alt={image.title || "AC Service"}
+                  loading="lazy"
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-end">
@@ -66,7 +67,7 @@ const Gallery = () => {
                     )}
                   </div>
                 </div>
-                </motion.div>
+              </motion.div>
               ))}
             </motion.div>
         )}
@@ -102,6 +103,7 @@ const Gallery = () => {
                 <img
                   src={selectedImage.url}
                   alt={selectedImage.title}
+                  loading="eager"
                   className="max-w-full max-h-[80vh] object-contain rounded-lg"
                 />
                 <p className="text-background mt-3 text-center text-sm">{selectedImage.title}</p>
