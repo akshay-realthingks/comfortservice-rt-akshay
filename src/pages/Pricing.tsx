@@ -1,11 +1,19 @@
 import { MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PricingCardSkeleton } from "@/components/PricingCardSkeleton";
 import { Link } from "react-router-dom";
 import { CONTACT_INFO } from "@/config/contact";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 const Pricing = () => {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
   const handleWhatsApp = (service: string) => {
     const message = encodeURIComponent(`Hi! I'd like to know more about pricing for ${service}.`);
     window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=${message}`, "_blank");
@@ -50,17 +58,24 @@ const Pricing = () => {
           </p>
         </div>
 
-        <motion.div 
-          className="space-y-4"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            visible: {
-              transition: { staggerChildren: 0.1 }
-            }
-          }}
-        >
-          {pricingData.map((category, index) => (
+        {isLoading ? (
+          <div className="space-y-4">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <PricingCardSkeleton key={index} />
+            ))}
+          </div>
+        ) : (
+          <motion.div 
+            className="space-y-4"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: {
+                transition: { staggerChildren: 0.1 }
+              }
+            }}
+          >
+            {pricingData.map((category, index) => (
             <motion.div
               key={index}
               variants={{
@@ -100,9 +115,10 @@ const Pricing = () => {
                 </div>
               </CardContent>
             </Card>
-            </motion.div>
-          ))}
-        </motion.div>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
 
         <div className="mt-8 grid md:grid-cols-2 gap-4">
           <div className="bg-accent rounded-lg p-5">
