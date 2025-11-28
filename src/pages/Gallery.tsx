@@ -183,30 +183,56 @@ const Gallery = () => {
 
               {/* Image Container */}
               <motion.div 
-                className="max-w-4xl max-h-[90vh] flex flex-col items-center relative"
+                className="max-w-4xl max-h-[90vh] flex flex-col items-center relative touch-none"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.8, opacity: 0 }}
                 transition={{ duration: 0.3 }}
                 onClick={(e) => e.stopPropagation()}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(_, info) => {
+                  // Swipe threshold - 50px minimum swipe distance
+                  const swipeThreshold = 50;
+                  const swipeVelocity = 500;
+                  
+                  if (Math.abs(info.offset.x) > swipeThreshold || Math.abs(info.velocity.x) > swipeVelocity) {
+                    if (info.offset.x > 0) {
+                      // Swiped right - go to previous
+                      handlePrevious();
+                    } else {
+                      // Swiped left - go to next
+                      handleNext();
+                    }
+                  }
+                }}
               >
                 {lightboxImageLoading && (
-                  <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <div className="w-8 h-8 border-4 border-background/30 border-t-background rounded-full animate-spin" />
                   </div>
                 )}
-                <img
+                <motion.img
+                  key={selectedImage.image_url}
                   src={selectedImage.image_url}
                   alt={selectedImage.title || "Gallery Image"}
-                  className={`max-w-full max-h-[80vh] object-contain rounded-lg transition-opacity duration-300 ${
+                  className={`max-w-full max-h-[80vh] object-contain rounded-lg transition-opacity duration-300 select-none ${
                     lightboxImageLoading ? 'opacity-0' : 'opacity-100'
                   }`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: lightboxImageLoading ? 0 : 1 }}
+                  transition={{ duration: 0.2 }}
                   onLoad={() => setLightboxImageLoading(false)}
+                  draggable={false}
                 />
-                <div className="text-background mt-3 text-center">
+                <div className="text-background mt-3 text-center select-none">
                   <p className="text-sm font-medium">{selectedImage.title}</p>
                   <p className="text-xs opacity-70 mt-1">
                     {selectedImageIndex !== null && `${selectedImageIndex + 1} / ${galleryImages.length}`}
+                  </p>
+                  <p className="text-xs opacity-50 mt-2">
+                    Swipe or use arrow keys to navigate
                   </p>
                 </div>
               </motion.div>
