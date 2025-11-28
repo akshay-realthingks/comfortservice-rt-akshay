@@ -171,56 +171,56 @@ export const galleryImages = [
   {
     id: "1",
     title: "Split AC Installation",
-    image_url: "https://images.unsplash.com/photo-1625961332771-3f40b0e2bdcf?w=800&auto=format&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1635779805497-f3fd1f1bb818?w=800&auto=format&fit=crop&q=80",
     description: "Professional split AC installation in residential apartment",
     created_at: "2024-01-10"
   },
   {
     id: "2",
     title: "AC Deep Cleaning Service",
-    image_url: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&auto=format&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800&auto=format&fit=crop&q=80",
     description: "Thorough deep cleaning of AC unit including coils and filters",
     created_at: "2024-01-12"
   },
   {
     id: "3",
     title: "AC Repair Work",
-    image_url: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=800&auto=format&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800&auto=format&fit=crop&q=80",
     description: "Expert technician performing AC repair and troubleshooting",
     created_at: "2024-01-15"
   },
   {
     id: "4",
     title: "Commercial AC Maintenance",
-    image_url: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=800&auto=format&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800&auto=format&fit=crop&q=80",
     description: "Office and commercial AC maintenance service",
     created_at: "2024-01-18"
   },
   {
     id: "5",
     title: "AC Gas Refilling",
-    image_url: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&auto=format&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=800&auto=format&fit=crop&q=80",
     description: "Professional gas refilling and pressure check service",
     created_at: "2024-01-20"
   },
   {
     id: "6",
     title: "Window AC Service",
-    image_url: "https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=800&auto=format&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1581092162384-8987c1d64718?w=800&auto=format&fit=crop&q=80",
     description: "Complete servicing of window AC unit",
     created_at: "2024-01-22"
   },
   {
     id: "7",
     title: "Cassette AC Installation",
-    image_url: "https://images.unsplash.com/photo-1631889993959-41b4e9c6e3c5?w=800&auto=format&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&auto=format&fit=crop&q=80",
     description: "Commercial cassette AC installation in office space",
     created_at: "2024-01-25"
   },
   {
     id: "8",
     title: "AC Filter Cleaning",
-    image_url: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&auto=format&fit=crop",
+    image_url: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&auto=format&fit=crop&q=80",
     description: "Detailed filter cleaning and sanitization service",
     created_at: "2024-01-28"
   }
