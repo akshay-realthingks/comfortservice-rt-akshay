@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
 import { Phone, MessageCircle, CheckCircle, Clock, Shield, Users, Star, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { CONTACT_INFO } from "@/config/contact";
 import { testimonials } from "@/data/staticData";
-import { getFeaturedServices, getServiceOverview } from "@/data/servicesData";
+import { useServices } from "@/contexts/DataStoreContext";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { motion, useScroll, useTransform } from "framer-motion";
 
@@ -29,9 +29,25 @@ const Home = () => {
     window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=${message}`, "_blank");
   };
 
+  const [services] = useServices();
   const homeTestimonials = testimonials.filter(t => t.show_on_home);
-  const featuredServices = getFeaturedServices();
-  const serviceOverview = getServiceOverview();
+  
+  // Get featured services (showOnHome = true)
+  const featuredServices = services
+    .filter(s => s.showOnHome)
+    .sort((a, b) => a.displayOrder - b.displayOrder)
+    .slice(0, 3);
+  
+  // Get service overview by category
+  const serviceOverview = [
+    { label: "AC Servicing", desc: "Regular maintenance & deep cleaning", 
+      price: `From ${services.find(s => s.category === 'AC Servicing')?.priceLabel || '₹349'}` },
+    { label: "Installation", desc: "Professional setup for all AC types", 
+      price: `From ${services.find(s => s.category === 'Installation & Uninstallation')?.priceLabel || '₹599'}` },
+    { label: "Repairs", desc: "Fast troubleshooting & gas refill", 
+      price: `From ${services.find(s => s.category === 'Repair & Gas Refill')?.priceLabel || '₹299'}` },
+    { label: "AMC Plans", desc: "Annual contracts with priority support", price: "From ₹2,999" }
+  ];
 
   return (
     <div className="min-h-screen">
@@ -101,51 +117,42 @@ const Home = () => {
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <CardTitle className="text-base leading-tight">{service.name}</CardTitle>
                       <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full whitespace-nowrap">
-                        {service.highlight}
+                        Popular
                       </span>
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Users className="w-3.5 h-3.5" />
-                        <span>{service.customers} served</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Star className="w-3.5 h-3.5 fill-primary text-primary" />
-                        <span>{service.rating}</span>
-                      </div>
-                    </div>
+                    <p className="text-xs text-muted-foreground">{service.description}</p>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-bold text-primary">{service.price}</span>
-                      <span className="text-xs text-muted-foreground">onwards</span>
+                      <span className="text-2xl font-bold text-primary">{service.priceLabel}</span>
                     </div>
-                    <ul className="space-y-1.5">
-                      {service.features.map((feature, idx) => (
-                        <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
-                          <CheckCircle className="w-3.5 h-3.5 text-primary mt-0.5 flex-shrink-0" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="flex gap-2 pt-2">
-                      <Button asChild size="sm" className="flex-1">
-                        <Link to="/contact">Book Now</Link>
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="gap-1.5"
-                        onClick={() => {
-                          const message = encodeURIComponent(`Hi! I'm interested in ${service.name}. Please provide more details.`);
-                          window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=${message}`, "_blank");
-                        }}
-                      >
-                        <MessageCircle className="w-3.5 h-3.5" />
-                        Ask
-                      </Button>
-                    </div>
+                    {service.covered && service.covered.length > 0 && (
+                      <ul className="space-y-1.5">
+                        {service.covered.slice(0, 4).map((item, idx) => (
+                          <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
+                            <CheckCircle className="w-3.5 h-3.5 text-primary mt-0.5 flex-shrink-0" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </CardContent>
+                  <CardFooter className="flex gap-2 pt-0">
+                    <Button asChild className="flex-1 h-9 text-sm">
+                      <Link to="/contact">Book Now</Link>
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        const message = encodeURIComponent(`Hi! I'd like to know more about ${service.name}.`);
+                        window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=${message}`, "_blank");
+                      }}
+                      variant="outline"
+                      className="h-9"
+                    >
+                      <MessageCircle className="w-4 h-4 mr-2" />
+                      Ask
+                    </Button>
+                  </CardFooter>
                 </Card>
               </motion.div>
             ))}
@@ -153,37 +160,53 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Services Overview */}
-      <section className="section-padding bg-accent">
-        <div className="container-narrow">
+      {/* Complete AC Solutions */}
+      <section className="section-padding bg-accent/50">
+        <div className="container-wide">
           <div ref={servicesRef.ref} className={`scroll-animate ${servicesRef.isVisible ? 'visible' : ''}`}>
             <h2 className="text-center mb-2">Complete AC Solutions</h2>
             <p className="text-center text-muted-foreground text-sm mb-8 max-w-xl mx-auto">
-              From installation to repair, we handle all your air conditioning needs with professional expertise
+              From installation to maintenance, we handle all your AC needs
             </p>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {serviceOverview.map((item, index) => (
-              <Card key={index} className="text-center">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-sm">{item.label}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <p className="text-xs text-muted-foreground">{item.desc}</p>
-                  <p className="text-primary font-semibold text-sm">{item.price}</p>
-                </CardContent>
-              </Card>
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={{
+              visible: {
+                transition: { staggerChildren: 0.08 }
+              }
+            }}
+          >
+            {serviceOverview.map((service, index) => (
+              <motion.div
+                key={index}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+                transition={{ duration: 0.4 }}
+              >
+                <Card className="text-center h-full">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">{service.label}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-xs text-muted-foreground mb-3">{service.desc}</p>
+                    <p className="text-primary font-semibold">{service.price}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
-          </div>
-
-          <div className="text-center">
-            <Button asChild size="lg" className="gap-2">
-              <Link to="/services">View All Services & Pricing</Link>
+          </motion.div>
+          
+          <div className="text-center mt-8">
+            <Button asChild size="lg">
+              <Link to="/services">View All Services</Link>
             </Button>
-            <p className="text-xs text-muted-foreground mt-3">
-              Transparent pricing • Detailed breakdowns • No hidden charges
-            </p>
           </div>
         </div>
       </section>
@@ -192,61 +215,76 @@ const Home = () => {
       <section className="section-padding">
         <div className="container-wide">
           <div ref={whyUsRef.ref} className={`scroll-animate ${whyUsRef.isVisible ? 'visible' : ''}`}>
-            <h2 className="text-center mb-8">Why Choose Us</h2>
+            <h2 className="text-center mb-2">Why Choose Comfort Technical Service?</h2>
+            <p className="text-center text-muted-foreground text-sm mb-8 max-w-xl mx-auto">
+              Trusted by thousands of customers in Pune & PCMC for AC service excellence
+            </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {[
-              {
-                icon: Users,
-                title: "Experienced Team",
-                desc: CONTACT_INFO.experienceText
-              },
-              {
-                icon: Clock,
-                title: "On-Time Service",
-                desc: "Same-day and next-day appointments available"
-              },
-              {
-                icon: CheckCircle,
-                title: "Transparent Pricing",
-                desc: "Clear quotes before work, no hidden charges"
-              },
-              {
-                icon: Shield,
-                title: "Service Warranty",
-                desc: "Quality guaranteed with service warranty"
+          
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={{
+              visible: {
+                transition: { staggerChildren: 0.1 }
               }
+            }}
+          >
+            {[
+              { icon: Clock, title: "Same-Day Service", desc: "Quick response for urgent repairs" },
+              { icon: Shield, title: "Warranty Assured", desc: "Service warranty on all work" },
+              { icon: Users, title: "Expert Team", desc: "Certified and experienced technicians" },
+              { icon: TrendingUp, title: "Best Rates", desc: "Transparent, competitive pricing" }
             ].map((item, index) => (
-              <div key={index} className="text-center">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <item.icon className="w-5 h-5 text-primary" />
-                </div>
-                <h3 className="text-sm font-semibold mb-1">{item.title}</h3>
-                <p className="text-xs text-muted-foreground">{item.desc}</p>
-              </div>
+              <motion.div
+                key={index}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+                transition={{ duration: 0.4 }}
+              >
+                <Card className="text-center card-hover h-full">
+                  <CardHeader>
+                    <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-3">
+                      <item.icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <CardTitle className="text-base">{item.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-xs text-muted-foreground">{item.desc}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Process Steps */}
-      <section className="section-padding bg-accent">
-        <div className="container-narrow">
+      {/* How It Works */}
+      <section className="section-padding bg-accent/50">
+        <div className="container-wide">
           <div ref={processRef.ref} className={`scroll-animate ${processRef.isVisible ? 'visible' : ''}`}>
-            <h2 className="text-center mb-8">How It Works</h2>
+            <h2 className="text-center mb-2">How It Works</h2>
+            <p className="text-center text-muted-foreground text-sm mb-8 max-w-xl mx-auto">
+              Simple steps to get your AC serviced
+            </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
             {[
-              { step: "1", title: "Book Online or Call", desc: "Schedule via website or phone" },
-              { step: "2", title: "Technician Visits", desc: "Expert arrives at your location" },
-              { step: "3", title: "Diagnosis & Quote", desc: "Issue identified, quote provided" },
-              { step: "4", title: "Service Complete", desc: "Work done efficiently & cleanly" }
+              { step: "1", title: "Book Service", desc: "Call, WhatsApp or book online" },
+              { step: "2", title: "Schedule Visit", desc: "Choose convenient time slot" },
+              { step: "3", title: "Expert Service", desc: "Professional AC technician visits" },
+              { step: "4", title: "Quality Check", desc: "Testing and warranty assured" }
             ].map((item, index) => (
               <div key={index} className="text-center">
-                <div className="w-10 h-10 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-2 text-sm font-bold">
+                <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-3 font-bold">
                   {item.step}
                 </div>
-                <h3 className="text-sm font-semibold mb-1">{item.title}</h3>
+                <h3 className="font-semibold mb-1 text-sm">{item.title}</h3>
                 <p className="text-xs text-muted-foreground">{item.desc}</p>
               </div>
             ))}
@@ -258,8 +296,12 @@ const Home = () => {
       <section className="section-padding">
         <div className="container-wide">
           <div ref={testimonialsRef.ref} className={`scroll-animate ${testimonialsRef.isVisible ? 'visible' : ''}`}>
-            <h2 className="text-center mb-8">What Our Customers Say</h2>
+            <h2 className="text-center mb-2">What Our Customers Say</h2>
+            <p className="text-center text-muted-foreground text-sm mb-8 max-w-xl mx-auto">
+              Real feedback from satisfied customers
+            </p>
           </div>
+          
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-3 gap-4"
             initial="hidden"
@@ -271,55 +313,41 @@ const Home = () => {
               }
             }}
           >
-            {homeTestimonials.map((testimonial) => (
+            {homeTestimonials.map((testimonial, index) => (
               <motion.div
-                key={testimonial.id}
+                key={index}
                 variants={{
-                  hidden: { opacity: 0, scale: 0.95 },
-                  visible: { opacity: 1, scale: 1 }
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
                 }}
                 transition={{ duration: 0.4 }}
               >
-                <TestimonialCard
-                  name={testimonial.name}
-                  rating={testimonial.rating}
-                  review={testimonial.review_text}
-                  city={testimonial.city || undefined}
-                />
+                <TestimonialCard {...testimonial} review={testimonial.review_text} />
               </motion.div>
             ))}
           </motion.div>
-          <div className="text-center mt-6">
-            <Button asChild variant="outline">
-              <a 
-                href="https://www.google.com/search?q=comfort+technical+services+pune" 
-                target="_blank" 
-                rel="noopener noreferrer"
-              >
-                View All Reviews on Google
-              </a>
-            </Button>
-          </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="section-padding-sm bg-primary text-primary-foreground">
-        <div className="container-narrow text-center">
-          <h2 className="text-primary-foreground mb-2">Ready to Book Your AC Service?</h2>
-          <p className="mb-6 opacity-90 text-sm">
-            Get fast, professional service today. Call or WhatsApp us now!
+      {/* CTA */}
+      <section className="section-padding bg-primary text-primary-foreground">
+        <div className="container-wide text-center">
+          <h2 className="mb-3">Ready to Get Started?</h2>
+          <p className="mb-6 text-primary-foreground/90">
+            Book your AC service today and experience the difference
           </p>
           <div className="flex flex-wrap justify-center gap-3">
-            <Button asChild variant="secondary">
-              <Link to="/contact">Book Now</Link>
+            <Button asChild size="lg" variant="secondary">
+              <Link to="/contact">Book Service</Link>
             </Button>
-            <Button
+            <Button 
               onClick={handleWhatsApp}
-              className="gap-2 bg-[#25D366] hover:bg-[#20BA5A] text-white"
+              size="lg" 
+              variant="outline"
+              className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
             >
-              <MessageCircle className="w-4 h-4" />
-              WhatsApp
+              <MessageCircle className="w-4 h-4 mr-2" />
+              WhatsApp Us
             </Button>
           </div>
         </div>

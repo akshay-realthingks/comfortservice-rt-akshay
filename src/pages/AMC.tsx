@@ -2,8 +2,9 @@ import { Check, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { PricingCardSkeleton } from "@/components/PricingCardSkeleton";
-import { AMC_PLANS, CONTACT_INFO } from "@/config/contact";
+import { CONTACT_INFO } from "@/config/contact";
 import { Link } from "react-router-dom";
+import { useAmcPlans } from "@/contexts/DataStoreContext";
 import {
   Accordion,
   AccordionContent,
@@ -15,6 +16,12 @@ import { useState, useEffect } from "react";
 
 const AMC = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const [amcPlans] = useAmcPlans();
+  
+  // Filter active plans and sort by display order
+  const activePlans = amcPlans
+    .filter(plan => plan.isActive)
+    .sort((a, b) => a.displayOrder - b.displayOrder);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 300);
@@ -68,32 +75,23 @@ const AMC = () => {
               }
             }}
           >
-            {AMC_PLANS.map((plan, index) => (
+            {activePlans.map((plan, index) => (
             <motion.div
-              key={index}
+              key={plan.id}
               variants={{
                 hidden: { opacity: 0, scale: 0.9 },
                 visible: { opacity: 1, scale: 1 }
               }}
               transition={{ duration: 0.4 }}
             >
-              <Card
-              key={index}
-              className={`card-hover ${plan.popular ? "border-primary shadow-md ring-1 ring-primary/20" : ""}`}
-            >
-              {plan.popular && (
-                <div className="bg-primary text-primary-foreground text-center py-1.5 text-xs font-medium">
-                  Most Popular
-                </div>
-              )}
+              <Card className="card-hover">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg">{plan.name}</CardTitle>
-                <CardDescription className="text-xs">{plan.subtitle}</CardDescription>
+                <CardDescription className="text-xs">{plan.targetCustomer}</CardDescription>
                 <div className="mt-3">
-                  <span className="text-2xl font-bold text-primary">{plan.price}</span>
-                  <span className="text-muted-foreground text-sm">{plan.duration}</span>
+                  <span className="text-2xl font-bold text-primary">{plan.priceLabel}</span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">{plan.visits}</p>
+                <p className="text-xs text-muted-foreground mt-1">{plan.visitsPerYear} visits per year</p>
               </CardHeader>
               <CardContent className="pb-3">
                 <ul className="space-y-2">
@@ -113,8 +111,8 @@ const AMC = () => {
                   <MessageCircle className="w-4 h-4" />
                 </Button>
               </CardFooter>
-                </Card>
-              </motion.div>
+              </Card>
+            </motion.div>
             ))}
           </motion.div>
         )}

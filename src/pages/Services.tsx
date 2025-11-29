@@ -6,12 +6,28 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { servicesData } from "@/data/servicesData";
+import { useServices } from "@/contexts/DataStoreContext";
 
 const Services = () => {
   const headerRef = useScrollAnimation();
   const servicesRef = useScrollAnimation();
   const [isLoading, setIsLoading] = useState(true);
+  const [services] = useServices();
+
+  // Group services by category
+  const servicesData = services.reduce((acc, service) => {
+    const existingCategory = acc.find(cat => cat.category === service.category);
+    if (existingCategory) {
+      existingCategory.items.push(service);
+    } else {
+      acc.push({
+        category: service.category,
+        description: '',
+        items: [service]
+      });
+    }
+    return acc;
+  }, [] as Array<{ category: string; description: string; items: typeof services }>);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 300);
@@ -87,12 +103,12 @@ const Services = () => {
                               <div className="flex items-start justify-between gap-2">
                                 <div className="flex-1 min-w-0">
                                   <span className="text-sm font-medium block">{item.name}</span>
-                                  <span className="text-xs text-muted-foreground block mt-0.5">{item.details}</span>
+                                  <span className="text-xs text-muted-foreground block mt-0.5">{item.description}</span>
                                 </div>
-                                <span className="text-primary font-semibold text-sm whitespace-nowrap">{item.price}</span>
+                                 <span className="text-primary font-semibold text-sm whitespace-nowrap">{item.priceLabel}</span>
                               </div>
                               
-                              {item.covered && (
+                              {item.covered && item.covered.length > 0 && (
                                 <div className="mt-1 pt-2 border-t border-border/50">
                                   <span className="text-xs font-medium text-foreground block mb-1.5">What's Covered:</span>
                                   <ul className="space-y-1">
