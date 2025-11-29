@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { CONTACT_INFO } from "@/config/contact";
 import { testimonials } from "@/data/staticData";
+import { getFeaturedServices, getServiceOverview } from "@/data/servicesData";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { motion, useScroll, useTransform } from "framer-motion";
 
@@ -29,6 +30,8 @@ const Home = () => {
   };
 
   const homeTestimonials = testimonials.filter(t => t.show_on_home);
+  const featuredServices = getFeaturedServices();
+  const serviceOverview = getServiceOverview();
 
   return (
     <div className="min-h-screen">
@@ -84,32 +87,7 @@ const Home = () => {
               }
             }}
           >
-            {[
-              {
-                name: "Split AC Deep Cleaning",
-                price: "₹799",
-                customers: "2,500+",
-                rating: "4.9",
-                highlight: "Most Booked",
-                features: ["Complete coil cleaning", "Gas pressure check", "Filter sanitization", "Performance optimization"]
-              },
-              {
-                name: "AC Gas Refilling",
-                price: "₹1,499",
-                customers: "1,800+",
-                rating: "4.8",
-                highlight: "Quick Service",
-                features: ["R22/R32 gas", "Leak detection", "Pressure testing", "Cooling restored"]
-              },
-              {
-                name: "AC Installation",
-                price: "₹799",
-                customers: "3,200+",
-                rating: "4.9",
-                highlight: "Expert Setup",
-                features: ["Professional mounting", "Piping up to 3m", "Safe gas handling", "Testing included"]
-              }
-            ].map((service, index) => (
+            {featuredServices.map((service, index) => (
               <motion.div
                 key={index}
                 variants={{
@@ -186,12 +164,7 @@ const Home = () => {
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {[
-              { label: "AC Servicing", desc: "Regular maintenance & deep cleaning", price: "From ₹349" },
-              { label: "Installation", desc: "Professional setup for all AC types", price: "From ₹599" },
-              { label: "Repairs", desc: "Fast troubleshooting & gas refill", price: "From ₹299" },
-              { label: "AMC Plans", desc: "Annual contracts with priority support", price: "From ₹2,999" }
-            ].map((item, index) => (
+            {serviceOverview.map((item, index) => (
               <Card key={index} className="text-center">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm">{item.label}</CardTitle>
