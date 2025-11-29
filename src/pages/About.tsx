@@ -83,6 +83,15 @@ const About = () => {
               );
             };
 
+            const isGoogleStat = stat.label === "Google Reviews" || stat.label === "Google Rating";
+            const content = (
+              <>
+                <stat.icon className="w-6 h-6 text-primary mx-auto mb-2" />
+                <StatCounter />
+                <div className="text-xs text-muted-foreground">{stat.label}</div>
+              </>
+            );
+
             return (
               <motion.div
                 key={index}
@@ -93,9 +102,16 @@ const About = () => {
                 transition={{ duration: 0.4 }}
                 className="text-center p-4 bg-card rounded-lg border border-border"
               >
-                <stat.icon className="w-6 h-6 text-primary mx-auto mb-2" />
-                <StatCounter />
-                <div className="text-xs text-muted-foreground">{stat.label}</div>
+                {isGoogleStat ? (
+                  <a 
+                    href="https://www.google.com/search?q=comfort+technical+services+pune" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="block hover:scale-105 transition-transform"
+                  >
+                    {content}
+                  </a>
+                ) : content}
               </motion.div>
             );
           })}

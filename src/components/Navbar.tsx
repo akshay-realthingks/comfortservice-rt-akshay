@@ -22,9 +22,6 @@ export const Navbar = () => {
     name: "Services",
     path: "/services"
   }, {
-    name: "Pricing",
-    path: "/pricing"
-  }, {
     name: "AMC Plans",
     path: "/amc"
   }, {
