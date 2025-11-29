@@ -115,14 +115,13 @@ export const ServiceFormDialog = ({ open, onOpenChange, service, onSave }: Servi
             <Label htmlFor="covered">What's Covered (one per line)</Label>
             <Textarea
               id="covered"
-              {...register('covered')}
               placeholder="Indoor coil deep cleaning&#10;Outdoor condenser coil cleaning&#10;Gas pressure check"
               rows={4}
               onChange={(e) => {
                 const lines = e.target.value.split('\n').filter(line => line.trim());
                 setValue('covered', lines as any);
               }}
-              value={watch('covered')?.join('\n') || ''}
+              value={Array.isArray(watch('covered')) ? watch('covered').join('\n') : ''}
             />
           </div>
 
