@@ -10,6 +10,8 @@ import GoogleReviewWidget from "@/components/GoogleReviewWidget";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { PageTransition } from "@/components/PageTransition";
+import { DataStoreProvider } from "@/contexts/DataStoreContext";
+import { ProtectedRoute } from "@/components/admin/ProtectedRoute";
 import Home from "./pages/Home";
 import Services from "./pages/Services";
 import AMC from "./pages/AMC";
@@ -19,9 +21,23 @@ import FAQs from "./pages/FAQs";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import { AdminLogin } from "./pages/admin/Login";
+import { AdminDashboard } from "./pages/admin/Dashboard";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
+  
+  // Admin routes should not have PageTransition or Navbar/Footer
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
+  if (isAdminRoute) {
+    return (
+      <Routes location={location}>
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin/dashboard" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+      </Routes>
+    );
+  }
 
   return (
     <AnimatePresence mode="wait">
@@ -40,24 +56,43 @@ const AnimatedRoutes = () => {
   );
 };
 
-const App = () => (
-  <TooltipProvider>
-    <Toaster />
-    <Sonner />
-    <BrowserRouter>
+const App = () => {
+  return (
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <DataStoreProvider>
+          <AppContent />
+        </DataStoreProvider>
+      </BrowserRouter>
+    </TooltipProvider>
+  );
+};
+
+const AppContent = () => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
+  return (
+    <>
       <ScrollToTop />
-      <ScrollProgress />
+      {!isAdminRoute && <ScrollProgress />}
       <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow">
+        {!isAdminRoute && <Navbar />}
+        <main className={isAdminRoute ? "" : "flex-grow"}>
           <AnimatedRoutes />
         </main>
-        <Footer />
-        <WhatsAppButton />
-        <GoogleReviewWidget />
+        {!isAdminRoute && (
+          <>
+            <Footer />
+            <WhatsAppButton />
+            <GoogleReviewWidget />
+          </>
+        )}
       </div>
-    </BrowserRouter>
-  </TooltipProvider>
-);
+    </>
+  );
+};
 
 export default App;
