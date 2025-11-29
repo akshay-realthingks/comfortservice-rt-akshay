@@ -133,14 +133,13 @@ export const AMCPlanFormDialog = ({ open, onOpenChange, plan, onSave }: AMCPlanF
             <Label htmlFor="features">Features (one per line)</Label>
             <Textarea
               id="features"
-              {...register('features')}
               placeholder="2 scheduled service visits per year&#10;Filter cleaning & sanitization&#10;Priority booking"
               rows={5}
               onChange={(e) => {
                 const lines = e.target.value.split('\n').filter(line => line.trim());
                 setValue('features', lines as any);
               }}
-              value={watch('features')?.join('\n') || ''}
+              value={Array.isArray(watch('features')) ? watch('features').join('\n') : ''}
             />
           </div>
 
