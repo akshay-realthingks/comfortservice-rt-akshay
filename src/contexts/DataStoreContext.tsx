@@ -205,8 +205,8 @@ export const DataStoreProvider = ({ children }: { children: ReactNode }) => {
   const [services, setServices] = useState<Service[]>([]);
   const [amcPlans, setAmcPlans] = useState<AMCPlan[]>([]);
 
-  useEffect(() => {
-    // Load from localStorage or use defaults
+  // Function to load data from localStorage
+  const loadData = () => {
     const storedServices = localStorage.getItem('cts_services');
     const storedAmcPlans = localStorage.getItem('cts_amc_plans');
 
@@ -233,16 +233,36 @@ export const DataStoreProvider = ({ children }: { children: ReactNode }) => {
       setAmcPlans(defaultAmcPlans);
       localStorage.setItem('cts_amc_plans', JSON.stringify(defaultAmcPlans));
     }
+  };
+
+  useEffect(() => {
+    // Initial load
+    loadData();
+
+    // Listen for custom storage events (within same tab)
+    const handleStorageUpdate = () => {
+      loadData();
+    };
+
+    window.addEventListener('storage-update', handleStorageUpdate);
+
+    return () => {
+      window.removeEventListener('storage-update', handleStorageUpdate);
+    };
   }, []);
 
   const updateServices = (newServices: Service[]) => {
     setServices(newServices);
     localStorage.setItem('cts_services', JSON.stringify(newServices));
+    // Dispatch custom event to notify other parts of the app
+    window.dispatchEvent(new Event('storage-update'));
   };
 
   const updateAmcPlans = (newPlans: AMCPlan[]) => {
     setAmcPlans(newPlans);
     localStorage.setItem('cts_amc_plans', JSON.stringify(newPlans));
+    // Dispatch custom event to notify other parts of the app
+    window.dispatchEvent(new Event('storage-update'));
   };
 
   return (
