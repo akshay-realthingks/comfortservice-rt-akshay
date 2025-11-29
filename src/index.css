@@ -173,9 +173,9 @@
     @apply max-w-6xl mx-auto px-3 sm:px-4 md:px-6;
   }
 
-  /* Card hover effect */
+  /* Card hover effect - subtle and classy */
   .card-hover {
-    @apply transition-all duration-200 hover:shadow-md hover:-translate-y-0.5;
+    @apply transition-all duration-300 ease-out hover:shadow-lg hover:-translate-y-1;
   }
 
   /* Scroll animation utilities */
