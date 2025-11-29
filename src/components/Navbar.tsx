@@ -1,58 +1,96 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Phone, MessageCircle, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CONTACT_INFO } from "@/config/contact";
 import logo from "@/assets/logo.png";
 import { motion, AnimatePresence } from "framer-motion";
+import { scrollToSection } from "@/utils/scrollToSection";
+import { useScrollSpy } from "@/hooks/useScrollSpy";
+
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  
+  const sections = ["home", "services", "pricing", "amc", "service-areas", "about", "faqs", "gallery", "contact"];
+  const activeSection = useScrollSpy(sections, 100);
+
   const handleCall = () => {
     window.location.href = `tel:${CONTACT_INFO.phone}`;
   };
+
   const handleWhatsApp = () => {
     const message = encodeURIComponent("Hello! I would like to know more about your AC services.");
     window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=${message}`, "_blank");
   };
-  const navLinks = [{
-    name: "Home",
-    path: "/"
-  }, {
-    name: "Services",
-    path: "/services"
-  }, {
-    name: "AMC Plans",
-    path: "/amc"
-  }, {
-    name: "Areas",
-    path: "/service-areas"
-  }, {
-    name: "About",
-    path: "/about"
-  }, {
-    name: "FAQs",
-    path: "/faqs"
-  }, {
-    name: "Gallery",
-    path: "/gallery"
-  }, {
-    name: "Contact",
-    path: "/contact"
-  }];
-  const isActive = (path: string) => location.pathname === path;
-  return <nav className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
+
+  const navLinks = [
+    { name: "Home", section: "home" },
+    { name: "Services", section: "services" },
+    { name: "Pricing", section: "pricing" },
+    { name: "AMC Plans", section: "amc" },
+    { name: "Service Areas", section: "service-areas" },
+    { name: "About", section: "about" },
+    { name: "FAQs", section: "faqs" },
+    { name: "Gallery", section: "gallery" },
+    { name: "Contact", section: "contact" },
+  ];
+
+  const handleNavClick = (section: string) => {
+    if (location.pathname !== "/") {
+      window.location.href = `/#${section}`;
+    } else {
+      scrollToSection(section);
+    }
+    setIsOpen(false);
+  };
+
+  const isActive = (section: string) => {
+    if (location.pathname === "/") {
+      return activeSection === section;
+    }
+    return false;
+  };
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
+
+  // Handle hash on page load
+  useEffect(() => {
+    if (location.hash && location.pathname === "/") {
+      const section = location.hash.replace("#", "");
+      setTimeout(() => scrollToSection(section), 100);
+    }
+  }, [location]);
+
+  return (
+    <nav className="sticky top-0 z-40 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="container-wide">
         <div className="flex justify-between items-center h-14">
-          <Link to="/" className="hover:opacity-80 transition-opacity flex-shrink-0 flex items-center gap-2">
+          <button 
+            onClick={() => handleNavClick("home")}
+            className="hover:opacity-80 transition-opacity flex-shrink-0 flex items-center gap-2"
+          >
             <img src={logo} alt={CONTACT_INFO.companyName} className="h-8 sm:h-10 w-auto" />
-          </Link>
+          </button>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map(link => <Link key={link.path} to={link.path} className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${isActive(link.path) ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-foreground hover:bg-accent"}`}>
+            {navLinks.map((link) => (
+              <button
+                key={link.name}
+                onClick={() => handleNavClick(link.section)}
+                className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                  isActive(link.section)
+                    ? "text-primary bg-primary/5"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                }`}
+              >
                 {link.name}
-              </Link>)}
+              </button>
+            ))}
           </div>
 
           {/* CTA Buttons */}
@@ -130,22 +168,25 @@ export const Navbar = () => {
                 }
               }}
             >
-              {navLinks.map(link => (
+              {navLinks.map((link) => (
                 <motion.div
-                  key={link.path}
+                  key={link.name}
                   variants={{
                     open: { opacity: 1, x: 0 },
                     closed: { opacity: 0, x: -20 }
                   }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Link 
-                    to={link.path} 
-                    onClick={() => setIsOpen(false)} 
-                    className={`block px-3 py-2 text-sm font-medium rounded-md transition-colors ${isActive(link.path) ? "text-primary bg-primary/5" : "text-foreground hover:bg-accent"}`}
+                  <button 
+                    onClick={() => handleNavClick(link.section)}
+                    className={`w-full text-left block px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                      isActive(link.section)
+                        ? "text-primary bg-primary/5"
+                        : "text-foreground hover:bg-accent"
+                    }`}
                   >
                     {link.name}
-                  </Link>
+                  </button>
                 </motion.div>
               ))}
               <motion.div 
@@ -169,5 +210,6 @@ export const Navbar = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>;
+    </nav>
+  );
 };
