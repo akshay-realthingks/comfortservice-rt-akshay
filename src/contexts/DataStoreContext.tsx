@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 
 export interface Service {
   id: string;
@@ -206,61 +206,78 @@ export const DataStoreProvider = ({ children }: { children: ReactNode }) => {
   const [amcPlans, setAmcPlans] = useState<AMCPlan[]>([]);
 
   // Function to load data from localStorage
-  const loadData = () => {
+  const loadData = useCallback(() => {
+    console.log('[DataStore] Loading data from localStorage...');
     const storedServices = localStorage.getItem('cts_services');
     const storedAmcPlans = localStorage.getItem('cts_amc_plans');
 
     if (storedServices) {
       try {
-        setServices(JSON.parse(storedServices));
+        const parsedServices = JSON.parse(storedServices);
+        console.log('[DataStore] Loaded services:', parsedServices.length);
+        setServices(parsedServices);
       } catch (e) {
+        console.log('[DataStore] Error parsing services, using defaults');
         setServices(defaultServices);
         localStorage.setItem('cts_services', JSON.stringify(defaultServices));
       }
     } else {
+      console.log('[DataStore] No stored services, using defaults');
       setServices(defaultServices);
       localStorage.setItem('cts_services', JSON.stringify(defaultServices));
     }
 
     if (storedAmcPlans) {
       try {
-        setAmcPlans(JSON.parse(storedAmcPlans));
+        const parsedPlans = JSON.parse(storedAmcPlans);
+        console.log('[DataStore] Loaded AMC plans:', parsedPlans.length);
+        setAmcPlans(parsedPlans);
       } catch (e) {
+        console.log('[DataStore] Error parsing AMC plans, using defaults');
         setAmcPlans(defaultAmcPlans);
         localStorage.setItem('cts_amc_plans', JSON.stringify(defaultAmcPlans));
       }
     } else {
+      console.log('[DataStore] No stored AMC plans, using defaults');
       setAmcPlans(defaultAmcPlans);
       localStorage.setItem('cts_amc_plans', JSON.stringify(defaultAmcPlans));
     }
-  };
+  }, []);
 
   useEffect(() => {
     // Initial load
+    console.log('[DataStore] Initializing DataStoreProvider');
     loadData();
 
     // Listen for custom storage events (within same tab)
     const handleStorageUpdate = () => {
+      console.log('[DataStore] Received storage-update event, reloading data...');
       loadData();
     };
 
     window.addEventListener('storage-update', handleStorageUpdate);
+    console.log('[DataStore] Event listener added for storage-update');
 
     return () => {
+      console.log('[DataStore] Cleaning up event listener');
       window.removeEventListener('storage-update', handleStorageUpdate);
     };
-  }, []);
+  }, [loadData]);
 
   const updateServices = (newServices: Service[]) => {
+    console.log('[DataStore] Updating services:', newServices.length);
     setServices(newServices);
     localStorage.setItem('cts_services', JSON.stringify(newServices));
+    console.log('[DataStore] Services saved to localStorage, dispatching event...');
     // Dispatch custom event to notify other parts of the app
     window.dispatchEvent(new Event('storage-update'));
   };
 
   const updateAmcPlans = (newPlans: AMCPlan[]) => {
+    console.log('[DataStore] Updating AMC plans:', newPlans.length);
     setAmcPlans(newPlans);
     localStorage.setItem('cts_amc_plans', JSON.stringify(newPlans));
+    console.log('[DataStore] AMC plans saved to localStorage, dispatching event...');
     // Dispatch custom event to notify other parts of the app
     window.dispatchEvent(new Event('storage-update'));
   };
