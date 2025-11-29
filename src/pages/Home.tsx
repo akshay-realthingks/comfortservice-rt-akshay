@@ -185,17 +185,22 @@ const Home = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {[
-              { label: "AC Servicing", desc: "Regular maintenance & deep cleaning" },
-              { label: "Installation", desc: "Professional setup for all AC types" },
-              { label: "Repairs", desc: "Fast troubleshooting & gas refill" },
-              { label: "AMC Plans", desc: "Annual contracts with priority support" }
+              { label: "AC Servicing", desc: "Regular maintenance & deep cleaning", price: "From ₹349" },
+              { label: "Installation", desc: "Professional setup for all AC types", price: "From ₹599" },
+              { label: "Repairs", desc: "Fast troubleshooting & gas refill", price: "From ₹299" },
+              { label: "AMC Plans", desc: "Annual contracts with priority support", price: "From ₹2,999" }
             ].map((item, index) => (
-              <div key={index} className="text-center p-4 bg-accent rounded-lg">
-                <h3 className="text-sm font-semibold mb-1">{item.label}</h3>
-                <p className="text-xs text-muted-foreground">{item.desc}</p>
-              </div>
+              <Card key={index} className="text-center">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm">{item.label}</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <p className="text-xs text-muted-foreground">{item.desc}</p>
+                  <p className="text-primary font-semibold text-sm">{item.price}</p>
+                </CardContent>
+              </Card>
             ))}
           </div>
 
