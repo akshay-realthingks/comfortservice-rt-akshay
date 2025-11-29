@@ -141,7 +141,6 @@ export const getFeaturedServices = () => {
     {
       ...servicesData[2].items[0], // Gas Refilling
       name: "AC Gas Refilling",
-      price: "₹1,499",
       customers: "1,800+",
       rating: "4.8",
       highlight: "Quick Service",
@@ -149,8 +148,6 @@ export const getFeaturedServices = () => {
     },
     {
       ...servicesData[1].items[0], // Split AC Installation
-      name: "AC Installation",
-      price: "₹799",
       customers: "3,200+",
       rating: "4.9",
       highlight: "Expert Setup",
