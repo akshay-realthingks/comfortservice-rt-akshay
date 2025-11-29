@@ -338,7 +338,7 @@ const Home = () => {
                     <div className="flex items-baseline gap-2">
                       <span className="text-xl font-bold text-primary">{service.priceLabel}</span>
                     </div>
-                    {service.covered && service.covered.length > 0 && (
+                    {service.covered && Array.isArray(service.covered) && service.covered.length > 0 && (
                       <ul className="space-y-1.5">
                         {service.covered.slice(0, 4).map((item, idx) => (
                           <li key={idx} className="text-xs text-muted-foreground flex items-start gap-2">
@@ -502,7 +502,7 @@ const Home = () => {
                               <span className="text-primary font-semibold text-sm whitespace-nowrap">{item.priceLabel}</span>
                             </div>
                             
-                            {item.covered && item.covered.length > 0 && (
+                            {item.covered && Array.isArray(item.covered) && item.covered.length > 0 && (
                               <div className="mt-1 pt-2 border-t border-border/50">
                                 <span className="text-xs font-medium text-foreground block mb-1.5">What's Covered:</span>
                                 <ul className="space-y-1">
